@@ -21,5 +21,6 @@
         <module>hospital-gateway</module>
         <module>hospital-auth</module>
         <module>hospital-hospital</module>
+        <module>hospital-booking</module>
     </modules>
 </project>
