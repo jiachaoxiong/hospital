@@ -23,5 +23,6 @@
         <module>hospital-hospital</module>
         <module>hospital-booking</module>
         <module>hospital-order</module>
+        <module>hospital-payment</module>
     </modules>
 </project>
