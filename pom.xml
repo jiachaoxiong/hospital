@@ -18,5 +18,6 @@
     <modules>
         <module>hospital-parent</module>
         <module>hospital-common</module>
+        <module>hospital-gateway</module>
     </modules>
 </project>

@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: hospital-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+    gateway:
+      routes:
+        - id: auth
+          uri: lb://hospital-auth
+          predicates:
+            - Path=/auth/**
+        - id: hospital
+          uri: lb://hospital-hospital
+          predicates:
+            - Path=/hospital/**,/department/**,/doctor/**
+        - id: booking
+          uri: lb://hospital-booking
+          predicates:
+            - Path=/booking/**,/schedule/**
+        - id: order
+          uri: lb://hospital-order
+          predicates:
+            - Path=/order/**
+        - id: payment
+          uri: lb://hospital-payment
+          predicates:
+            - Path=/payment/**
+        - id: notify
+          uri: lb://hospital-notify
+          predicates:
+            - Path=/notify/**,/sms/**
+
+jwt:
+  secret: ${JWT_SECRET:hospital-dev-secret-key-2026-min-length-32}
