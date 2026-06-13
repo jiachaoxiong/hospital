@@ -22,5 +22,6 @@
         <module>hospital-auth</module>
         <module>hospital-hospital</module>
         <module>hospital-booking</module>
+        <module>hospital-order</module>
     </modules>
 </project>
