@@ -1,0 +1,102 @@
+version: '3.8'
+services:
+  # ============ MySQL 数据库（每服务独立） ============
+  mysql-auth:
+    image: mysql:5.7
+    container_name: hospital-mysql-auth
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: hospital_auth
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./hospital-data/init-auth.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  mysql-hospital:
+    image: mysql:5.7
+    container_name: hospital-mysql-hospital
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: hospital_hospital
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./hospital-data/init-hospital.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  mysql-booking:
+    image: mysql:5.7
+    container_name: hospital-mysql-booking
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: hospital_booking
+    ports:
+      - "3309:3306"
+    volumes:
+      - ./hospital-data/init-booking.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  mysql-order:
+    image: mysql:5.7
+    container_name: hospital-mysql-order
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: hospital_order
+    ports:
+      - "3310:3306"
+    volumes:
+      - ./hospital-data/init-order.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  mysql-payment:
+    image: mysql:5.7
+    container_name: hospital-mysql-payment
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: hospital_payment
+    ports:
+      - "3311:3306"
+    volumes:
+      - ./hospital-data/init-payment.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  mysql-notify:
+    image: mysql:5.7
+    container_name: hospital-mysql-notify
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: hospital_notify
+    ports:
+      - "3312:3306"
+    volumes:
+      - ./hospital-data/init-notify.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # ============ 缓存 ============
+  redis:
+    image: redis:7-alpine
+    container_name: hospital-redis
+    ports:
+      - "6379:6379"
+
+  # ============ 消息队列 ============
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: hospital-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+
+  # ============ 注册配置中心 ============
+  nacos:
+    image: nacos/nacos-server:v2.3.0
+    container_name: hospital-nacos
+    environment:
+      MODE: standalone
+    ports:
+      - "8848:8848"
+      - "9848:9848"
