@@ -71,6 +71,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public User getUserById(Long userId) {
+        return userMapper.selectById(userId);
+    }
+
+    @Override
     public R<Map<String, String>> login(String phone, String password) {
         User user = userMapper.selectOne(
                 new LambdaQueryWrapper<User>().eq(User::getPhone, phone));

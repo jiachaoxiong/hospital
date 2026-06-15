@@ -1,17 +1,23 @@
 package com.hospital.booking.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hospital.booking.entity.Appointment;
+import com.hospital.booking.entity.DoctorPatientVO;
 import com.hospital.booking.entity.Schedule;
 import com.hospital.booking.mapper.AppointmentMapper;
 import com.hospital.booking.service.BookingService;
 import com.hospital.booking.service.ScheduleService;
 import com.hospital.common.BusinessException;
 import com.hospital.common.R;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,12 +25,22 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
     private final ScheduleService scheduleService;
     private final AppointmentMapper appointmentMapper;
     private final StringRedisTemplate redisTemplate;
+    private final RestTemplate restTemplate;
+
+    public BookingServiceImpl(ScheduleService scheduleService,
+                              AppointmentMapper appointmentMapper,
+                              StringRedisTemplate redisTemplate,
+                              RestTemplate restTemplate) {
+        this.scheduleService = scheduleService;
+        this.appointmentMapper = appointmentMapper;
+        this.redisTemplate = redisTemplate;
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     @Transactional
@@ -87,5 +103,69 @@ public class BookingServiceImpl implements BookingService {
                 .eq("id", appointment.getScheduleId())
                 .update();
         log.info("预约已取消: appointmentId={}", appointmentId);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Long getDoctorIdByUserId(Long userId) {
+        try {
+            Map<String, Object> resp = restTemplate.getForObject(
+                    "http://localhost:8082/doctor/byUserId/" + userId, Map.class);
+            if (resp != null && (int) resp.get("code") == 200) {
+                Map<String, Object> data = (Map<String, Object>) resp.get("data");
+                return ((Number) data.get("id")).longValue();
+            }
+        } catch (Exception e) {
+            log.error("调用hospital服务查询医生失败: userId={}, error={}", userId, e.getMessage());
+        }
+        throw new BusinessException("未找到关联的医生档案");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<DoctorPatientVO> getDoctorPatients(Long userId) {
+        // 1. 通过userId找到doctorId
+        Long doctorId = getDoctorIdByUserId(userId);
+
+        // 2. 查询该医生的所有预约记录
+        List<Appointment> appointments = appointmentMapper.selectList(
+                new LambdaQueryWrapper<Appointment>()
+                        .eq(Appointment::getDoctorId, doctorId)
+                        .orderByDesc(Appointment::getCreateTime));
+
+        List<DoctorPatientVO> result = new ArrayList<>();
+        for (Appointment apt : appointments) {
+            DoctorPatientVO vo = new DoctorPatientVO();
+            vo.setAppointmentId(apt.getId());
+            vo.setStatus(apt.getStatus());
+
+            // 3. 查询排班信息获取医院/科室/日期/时间/医生名
+            Schedule schedule = scheduleService.getById(apt.getScheduleId());
+            if (schedule != null) {
+                vo.setHospitalName(schedule.getHospitalName());
+                vo.setDepartmentName(schedule.getDepartmentName());
+                vo.setWorkDate(schedule.getWorkDate() != null ? schedule.getWorkDate().toString() : "");
+                vo.setTimeSlot(schedule.getStartTime() + " - " + schedule.getEndTime());
+                vo.setDoctorName(schedule.getDoctorName());
+            }
+
+            // 4. 调用auth服务获取患者姓名和手机号
+            try {
+                Map<String, Object> authResp = restTemplate.getForObject(
+                        "http://localhost:8081/auth/user/" + apt.getUserId(), Map.class);
+                if (authResp != null && (int) authResp.get("code") == 200) {
+                    Map<String, Object> userData = (Map<String, Object>) authResp.get("data");
+                    vo.setPatientName((String) userData.get("name"));
+                    vo.setPatientPhone((String) userData.get("phone"));
+                }
+            } catch (Exception e) {
+                log.warn("调用auth服务获取用户信息失败: userId={}, error={}", apt.getUserId(), e.getMessage());
+                vo.setPatientName("用户ID:" + apt.getUserId());
+                vo.setPatientPhone("");
+            }
+
+            result.add(vo);
+        }
+        return result;
     }
 }

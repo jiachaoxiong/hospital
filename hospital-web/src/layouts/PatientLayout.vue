@@ -1,6 +1,8 @@
 <template>
   <div>
-    <router-view />
+    <div style="padding-bottom: 50px;">
+      <router-view />
+    </div>
     <van-tabbar v-model="active" route>
       <van-tabbar-item icon="home-o" to="/patient/hospitals">首页</van-tabbar-item>
       <van-tabbar-item icon="orders-o" to="/patient/orders">订单</van-tabbar-item>

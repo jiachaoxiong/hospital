@@ -1,6 +1,9 @@
 package com.hospital.booking.service;
 
+import com.hospital.booking.entity.DoctorPatientVO;
 import com.hospital.common.R;
+
+import java.util.List;
 
 /**
  * 预约服务接口 — 提供挂号预约与取消功能
@@ -15,4 +18,14 @@ public interface BookingService {
      * 取消预约，自动释放号源
      */
     void cancelAppointment(Long appointmentId);
+
+    /**
+     * 医生查询预约自己的患者列表（通过userId找到doctorId，聚合患者、排班信息）
+     */
+    List<DoctorPatientVO> getDoctorPatients(Long userId);
+
+    /**
+     * 通过userId找到对应的doctorId
+     */
+    Long getDoctorIdByUserId(Long userId);
 }

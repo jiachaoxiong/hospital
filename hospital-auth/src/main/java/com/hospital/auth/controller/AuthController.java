@@ -2,6 +2,7 @@ package com.hospital.auth.controller;
 
 import com.hospital.auth.dto.LoginDTO;
 import com.hospital.auth.dto.RegisterDTO;
+import com.hospital.auth.entity.User;
 import com.hospital.auth.service.AuthService;
 import com.hospital.common.R;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,5 +39,15 @@ public class AuthController {
     @PostMapping("/login")
     public R<Map<String, String>> login(@RequestBody LoginDTO dto) {
         return authService.login(dto.getPhone(), dto.getPassword());
+    }
+
+    @Operation(summary = "根据ID获取用户信息")
+    @GetMapping("/user/{id}")
+    public R<User> getUserById(@PathVariable Long id) {
+        User user = authService.getUserById(id);
+        if (user == null) {
+            return R.fail("用户不存在");
+        }
+        return R.ok(user);
     }
 }

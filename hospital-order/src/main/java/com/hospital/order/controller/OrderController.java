@@ -20,12 +20,19 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    @Operation(summary = "创建订单")
+    @Operation(summary = "创建订单（含就诊信息）")
     @PostMapping("/create")
     public R<Long> create(@RequestHeader("X-User-Id") Long userId,
                           @RequestParam Long appointmentId,
-                          @RequestParam(defaultValue = "0") Double amount) {
-        return orderService.createOrder(userId, appointmentId, amount);
+                          @RequestParam(defaultValue = "0") Double amount,
+                          @RequestParam(defaultValue = "") String hospitalName,
+                          @RequestParam(defaultValue = "") String deptName,
+                          @RequestParam(defaultValue = "") String doctorName,
+                          @RequestParam(defaultValue = "") String doctorTitle,
+                          @RequestParam(defaultValue = "") String workDate,
+                          @RequestParam(defaultValue = "") String timeSlot) {
+        return orderService.createOrder(userId, appointmentId, amount,
+            hospitalName, deptName, doctorName, doctorTitle, workDate, timeSlot);
     }
 
     @Operation(summary = "支付成功回调")
@@ -42,9 +49,30 @@ public class OrderController {
         return R.ok();
     }
 
+    @Operation(summary = "管理员删除订单")
+    @DeleteMapping("/{id}")
+    public R<Void> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return R.ok();
+    }
+
     @Operation(summary = "我的订单")
     @GetMapping("/my")
     public R<List<Order>> myOrders(@RequestHeader("X-User-Id") Long userId) {
         return orderService.listUserOrders(userId);
+    }
+
+    @Operation(summary = "管理员分页查询全部订单")
+    @GetMapping("/list")
+    public R<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Order>> listAll(
+            @RequestParam(defaultValue = "1") Integer current,
+            @RequestParam(defaultValue = "10") Integer size) {
+        return R.ok(orderService.listAllOrders(current, size));
+    }
+
+    @Operation(summary = "订单详情")
+    @GetMapping("/{id}")
+    public R<Order> detail(@PathVariable Long id) {
+        return orderService.getOrderById(id);
     }
 }

@@ -21,6 +21,18 @@ public class Order extends BaseEntity {
     private Double amount;
     /** 订单状态：PENDING=待支付 / PAID=已支付 / VISITED=已就诊 / CANCELLED=已取消 */
     private String status;
+    /** 医院名称（冗余字段，用于订单列表直显） */
+    private String hospitalName;
+    /** 科室名称 */
+    private String deptName;
+    /** 医生姓名 */
+    private String doctorName;
+    /** 医生职称 */
+    private String doctorTitle;
+    /** 就诊日期 */
+    private String workDate;
+    /** 就诊时段描述 */
+    private String timeSlot;
     /** 支付完成时间 */
     private LocalDateTime payTime;
 }

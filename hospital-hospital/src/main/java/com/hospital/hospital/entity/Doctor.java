@@ -30,4 +30,7 @@ public class Doctor extends BaseEntity {
 
     /** 头像URL */
     private String avatarUrl;
+
+    /** 关联auth服务的用户ID，用于医生登录后查找自己的数据 */
+    private Long userId;
 }

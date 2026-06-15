@@ -11,6 +11,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'hospital/:id', component: () => import('@/views/patient/HospitalDetail.vue') },
       { path: 'booking/:scheduleId', component: () => import('@/views/patient/BookingConfirm.vue') },
       { path: 'orders', component: () => import('@/views/patient/MyOrders.vue') },
+      { path: 'order-detail/:id', component: () => import('@/views/patient/OrderDetail.vue') },
     ],
   },
   {

@@ -3,6 +3,11 @@ target/
 *.jar
 *.war
 
+# Node / Vite
+node_modules/
+dist/
+*.local
+
 # IDE
 .idea/
 *.iml
@@ -17,3 +22,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Env
+.env
+.env.*

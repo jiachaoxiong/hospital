@@ -1,6 +1,7 @@
 package com.hospital.order.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hospital.common.R;
 import com.hospital.order.entity.Order;
 import com.hospital.order.mapper.OrderMapper;
@@ -25,14 +26,23 @@ public class OrderServiceImpl implements OrderService {
     private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public R<Long> createOrder(Long userId, Long appointmentId, Double amount) {
+    public R<Long> createOrder(Long userId, Long appointmentId, Double amount,
+                               String hospitalName, String deptName, String doctorName,
+                               String doctorTitle, String workDate, String timeSlot) {
         Order order = new Order();
         order.setUserId(userId);
         order.setAppointmentId(appointmentId);
         order.setAmount(amount);
         order.setStatus("PENDING");
+        order.setHospitalName(hospitalName);
+        order.setDeptName(deptName);
+        order.setDoctorName(doctorName);
+        order.setDoctorTitle(doctorTitle);
+        order.setWorkDate(workDate);
+        order.setTimeSlot(timeSlot);
         orderMapper.insert(order);
-        log.info("订单创建成功: orderId={}, userId={}, appointmentId={}", order.getId(), userId, appointmentId);
+        log.info("订单创建成功: orderId={}, userId={}, hospital={}, doctor={}",
+            order.getId(), userId, hospitalName, doctorName);
         return R.ok(order.getId());
     }
 
@@ -60,11 +70,33 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void deleteOrder(Long orderId) {
+        orderMapper.deleteById(orderId);
+        log.info("订单已删除: orderId={}", orderId);
+    }
+
+    @Override
     public R<List<Order>> listUserOrders(Long userId) {
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Order::getUserId, userId)
                .orderByDesc(Order::getCreateTime);
         List<Order> orders = orderMapper.selectList(wrapper);
         return R.ok(orders);
+    }
+
+    @Override
+    public Page<Order> listAllOrders(Integer current, Integer size) {
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        wrapper.orderByDesc(Order::getCreateTime);
+        return orderMapper.selectPage(new Page<>(current, size), wrapper);
+    }
+
+    @Override
+    public R<Order> getOrderById(Long orderId) {
+        Order order = orderMapper.selectById(orderId);
+        if (order == null) {
+            return R.fail("订单不存在");
+        }
+        return R.ok(order);
     }
 }

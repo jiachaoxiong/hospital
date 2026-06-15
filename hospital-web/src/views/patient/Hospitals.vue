@@ -27,7 +27,8 @@ const onLoad = async () => {
     const res: any = await request.get('/hospital/list', { params: { current: page, size: 10 } });
     if (res.code === 200) {
       hospitals.value.push(...res.data.records);
-      finished.value = res.data.records.length < 10;
+      // 判断是否加载完毕：返回条数少于请求条数，或已加载全部记录
+      finished.value = res.data.records.length < 10 || hospitals.value.length >= (res.data.total || 0);
       page++;
     }
   } finally {

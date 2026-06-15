@@ -1,5 +1,6 @@
 package com.hospital.auth.service;
 
+import com.hospital.auth.entity.User;
 import com.hospital.common.R;
 import java.util.Map;
 
@@ -13,4 +14,7 @@ public interface AuthService {
     R<Map<String, String>> register(String phone, String password, String name, String role);
     /** 手机号+密码登录 */
     R<Map<String, String>> login(String phone, String password);
+
+    /** 根据ID获取用户信息 */
+    User getUserById(Long userId);
 }
