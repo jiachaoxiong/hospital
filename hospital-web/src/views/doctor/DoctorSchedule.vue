@@ -2,7 +2,7 @@
   <div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3>我的排班</h3>
-      <el-button type="primary" @click="showDialog = true">新增排班</el-button>
+      <el-button type="primary" @click="showDialog = true" class="add-btn">＋ 新增排班</el-button>
     </div>
     <el-table :data="pagedSchedules" border stripe style="width:100%;" table-layout="auto">
       <el-table-column prop="id" label="ID" width="55" align="center" />
@@ -132,3 +132,12 @@ const addSchedule = async () => {
   }
 };
 </script>
+
+<style scoped>
+.add-btn {
+  background: var(--color-primary-gradient) !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  font-weight: 500;
+}
+</style>
