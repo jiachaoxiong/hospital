@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="page-header">
       <h3>订单管理</h3>
     </div>
     <el-table :data="orders" border stripe style="width:100%;" table-layout="auto">

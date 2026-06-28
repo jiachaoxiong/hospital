@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="page-header">
       <h3>医生管理</h3>
-      <el-button type="primary" @click="showAdd">新增医生</el-button>
+      <el-button type="primary" @click="showAdd">＋ 新增医生</el-button>
     </div>
     <el-table :data="doctors" border stripe style="width:100%;" table-layout="auto">
       <el-table-column prop="id" label="ID" width="55" align="center" />
