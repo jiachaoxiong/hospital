@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import Vant from 'vant';
 import 'vant/lib/index.css';
+import '@/styles/global.css';  // 全局设计变量 + 主题覆盖
 import App from './App.vue';
 import router from './router';
 
