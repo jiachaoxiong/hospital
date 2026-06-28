@@ -1,12 +1,47 @@
 <template>
-  <div>
-    <van-nav-bar title="选择医院" />
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
-        <van-cell v-for="h in hospitals" :key="h.id" :title="h.name"
-          :label="h.level + ' | ' + h.city" is-link :to="`/patient/hospital/${h.id}`" />
-      </van-list>
-    </van-pull-refresh>
+  <div class="home-page">
+    <!-- 渐变顶栏 -->
+    <div class="home-header">
+      <div class="header-top">
+        <span class="header-city">📍 北京市</span>
+      </div>
+      <h1 class="header-title">预约挂号</h1>
+      <!-- 搜索框 -->
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <span class="search-placeholder">搜索医院、科室或医生</span>
+      </div>
+    </div>
+
+    <!-- 科室快捷入口 -->
+    <div class="dept-grid">
+      <div class="dept-item" v-for="d in quickDepts" :key="d.name">
+        <div class="dept-icon">{{ d.icon }}</div>
+        <div class="dept-name">{{ d.name }}</div>
+      </div>
+    </div>
+
+    <!-- 医院列表 -->
+    <div class="hospital-section">
+      <h3 class="section-title">推荐医院</h3>
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
+          <div v-for="h in hospitals" :key="h.id" class="hospital-card" @click="$router.push(`/patient/hospital/${h.id}`)">
+            <div class="hospital-main">
+              <div class="hospital-icon">🏥</div>
+              <div class="hospital-info">
+                <div class="hospital-name">
+                  {{ h.name }}
+                  <span class="hospital-level">{{ h.level }}</span>
+                </div>
+                <div class="hospital-addr">📍 {{ h.address }}</div>
+              </div>
+              <div class="hospital-arrow">›</div>
+            </div>
+          </div>
+        </van-list>
+      </van-pull-refresh>
+    </div>
   </div>
 </template>
 
@@ -14,20 +49,31 @@
 import { ref } from 'vue';
 import request from '@/utils/request';
 
+/** 快捷科室入口（静态展示） */
+const quickDepts = [
+  { name: '内科', icon: '🫀' },
+  { name: '外科', icon: '🦴' },
+  { name: '儿科', icon: '👶' },
+  { name: '眼科', icon: '👁️' },
+  { name: '妇科', icon: '👩' },
+  { name: '口腔科', icon: '🦷' },
+  { name: '皮肤科', icon: '🧴' },
+  { name: '骨科', icon: '🦵' },
+];
+
 const hospitals = ref<any[]>([]);
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
 let page = 1;
 
-// 加载医院列表
+/** 加载医院列表 */
 const onLoad = async () => {
   loading.value = true;
   try {
     const res: any = await request.get('/hospital/list', { params: { current: page, size: 10 } });
     if (res.code === 200) {
       hospitals.value.push(...res.data.records);
-      // 判断是否加载完毕：返回条数少于请求条数，或已加载全部记录
       finished.value = res.data.records.length < 10 || hospitals.value.length >= (res.data.total || 0);
       page++;
     }
@@ -37,6 +83,170 @@ const onLoad = async () => {
   }
 };
 
-// 下拉刷新
-const onRefresh = () => { page = 1; hospitals.value = []; finished.value = false; onLoad(); };
+/** 下拉刷新 */
+const onRefresh = () => {
+  page = 1;
+  hospitals.value = [];
+  finished.value = false;
+  onLoad();
+};
 </script>
+
+<style scoped>
+.home-page {
+  min-height: 100vh;
+  background: var(--bg-page);
+  padding-bottom: 50px;
+}
+
+/* ====== 渐变顶栏 ====== */
+.home-header {
+  background: var(--color-primary-gradient);
+  padding: 24px 16px 32px;
+  color: #fff;
+  border-radius: 0 0 20px 20px;
+}
+
+.header-top {
+  font-size: var(--font-size-caption);
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.header-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+/* 搜索框 */
+.search-box {
+  background: #fff;
+  border-radius: var(--radius-round);
+  padding: 12px 16px;
+  color: var(--text-placeholder);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+  font-size: 16px;
+}
+
+/* ====== 科室快捷入口 ====== */
+.dept-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: #fff;
+  margin: -8px 12px 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  z-index: 1;
+}
+
+.dept-item {
+  text-align: center;
+}
+
+.dept-icon {
+  width: 44px;
+  height: 44px;
+  background: #e8f4fd;
+  border-radius: 12px;
+  margin: 0 auto 6px;
+  line-height: 44px;
+  font-size: 22px;
+}
+
+.dept-name {
+  font-size: var(--font-size-caption);
+  color: var(--text-secondary);
+}
+
+/* ====== 医院列表 ====== */
+.hospital-section {
+  padding: 16px 12px;
+}
+
+.section-title {
+  font-size: var(--font-size-subtitle);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px 4px;
+}
+
+/* 医院卡片 */
+.hospital-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.hospital-card:active {
+  transform: scale(0.98);
+}
+
+.hospital-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hospital-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #e8f4fd, #d4edfc);
+  border-radius: 10px;
+  text-align: center;
+  line-height: 44px;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.hospital-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hospital-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hospital-level {
+  font-size: 10px;
+  color: var(--color-primary);
+  background: #e8f4fd;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.hospital-addr {
+  font-size: var(--font-size-caption);
+  color: var(--text-placeholder);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hospital-arrow {
+  color: var(--color-primary);
+  font-size: 24px;
+  flex-shrink: 0;
+}
+</style>
