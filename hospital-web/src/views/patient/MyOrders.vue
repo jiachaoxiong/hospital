@@ -82,3 +82,9 @@ const goDetail = (order: any) => {
 
 onMounted(loadOrders);
 </script>
+
+<style scoped>
+:deep(.van-nav-bar) {
+  background: var(--color-primary-gradient);
+}
+</style>

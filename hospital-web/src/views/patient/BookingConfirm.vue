@@ -21,7 +21,7 @@
     <!-- 确认按钮 -->
     <div style="padding: 24px 16px; text-align: center;">
       <van-button type="primary" block round :loading="submitting" @click="createOrder"
-        size="large">确认挂号 · ¥{{ query.price }}</van-button>
+        size="large" class="confirm-btn">确认挂号 · ¥{{ query.price }}</van-button>
     </div>
 
     <!-- ============ 模拟支付弹窗 ============ -->
@@ -164,3 +164,15 @@ const cancelPay = () => {
   showToast('已取消支付');
 };
 </script>
+
+<style scoped>
+:deep(.van-nav-bar) {
+  background: var(--color-primary-gradient);
+}
+.confirm-btn {
+  height: 48px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 2px;
+}
+</style>
