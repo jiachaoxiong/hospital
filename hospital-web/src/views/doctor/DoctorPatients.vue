@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h3>预约患者列表</h3>
+    <div class="page-header">
+      <h3>预约患者列表</h3>
+    </div>
     <el-table :data="pagedPatients" border stripe style="width:100%;" table-layout="auto">
       <el-table-column prop="appointmentId" label="预约ID" width="75" align="center" />
       <el-table-column prop="patientName" label="患者姓名" width="85" align="center" />
