@@ -4,25 +4,24 @@
     <!-- 顶部导航栏 -->
     <header class="top-nav">
       <div class="nav-left">
-        <span class="nav-logo">⚙️</span>
         <span class="nav-title">管理后台</span>
       </div>
       <nav class="nav-menu">
         <router-link to="/admin/hospitals" class="nav-item" active-class="nav-item--active">
-          🏥 医院管理
+          <el-icon><OfficeBuilding /></el-icon> 医院管理
         </router-link>
         <router-link to="/admin/doctors" class="nav-item" active-class="nav-item--active">
-          👨‍⚕️ 医生管理
+          <el-icon><UserFilled /></el-icon> 医生管理
         </router-link>
         <router-link to="/admin/schedules" class="nav-item" active-class="nav-item--active">
-          📅 排班管理
+          <el-icon><Calendar /></el-icon> 排班管理
         </router-link>
         <router-link to="/admin/orders" class="nav-item" active-class="nav-item--active">
-          📋 订单管理
+          <el-icon><Document /></el-icon> 订单管理
         </router-link>
       </nav>
       <div class="nav-right">
-        <span class="nav-user">👤 {{ userName }}</span>
+        <span class="nav-user">{{ userName }}</span>
         <button class="nav-logout" @click="onLogout">退出</button>
       </div>
     </header>
@@ -59,6 +58,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import request from '@/utils/request';
 import { showToast } from 'vant';
+import { OfficeBuilding, UserFilled, Calendar, Document } from '@element-plus/icons-vue';
 
 const router = useRouter();
 const userName = localStorage.getItem('name') || '管理员';
@@ -115,10 +115,6 @@ const onLogout = () => {
   align-items: center;
   gap: 8px;
   margin-right: 32px;
-}
-
-.nav-logo {
-  font-size: 20px;
 }
 
 .nav-title {

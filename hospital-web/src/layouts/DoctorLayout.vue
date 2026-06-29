@@ -4,19 +4,18 @@
     <!-- 顶部导航栏 -->
     <header class="top-nav">
       <div class="nav-left">
-        <span class="nav-logo">🏥</span>
         <span class="nav-title">医院预约系统</span>
       </div>
       <nav class="nav-menu">
         <router-link to="/doctor/schedule" class="nav-item" active-class="nav-item--active">
-          📅 排班管理
+          <el-icon><Calendar /></el-icon> 排班管理
         </router-link>
         <router-link to="/doctor/patients" class="nav-item" active-class="nav-item--active">
-          👥 患者列表
+          <el-icon><User /></el-icon> 患者列表
         </router-link>
       </nav>
       <div class="nav-right">
-        <span class="nav-user">👤 {{ userName }}</span>
+        <span class="nav-user">{{ userName }}</span>
         <button class="nav-logout" @click="onLogout">退出</button>
       </div>
     </header>
@@ -49,6 +48,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import request from '@/utils/request';
 import { showToast } from 'vant';
+import { Calendar, User } from '@element-plus/icons-vue';
 
 const router = useRouter();
 const userName = localStorage.getItem('name') || '医生';
@@ -105,10 +105,6 @@ const onLogout = () => {
   align-items: center;
   gap: 8px;
   margin-right: 32px;
-}
-
-.nav-logo {
-  font-size: 20px;
 }
 
 .nav-title {

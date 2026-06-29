@@ -10,11 +10,11 @@
     <!-- 医院信息卡片 -->
     <div class="hospital-info-card" v-if="hospital">
       <div class="hospital-name-row">
-        <span class="hosp-icon">🏥</span>
+        <span class="hosp-icon"><van-icon name="shop-o" /></span>
         <span class="hosp-name">{{ hospital.name }}</span>
         <span class="hosp-level">{{ hospital.level }}</span>
       </div>
-      <div class="hosp-address">📍 {{ hospital.address }}</div>
+      <div class="hosp-address">{{ hospital.address }}</div>
     </div>
 
     <!-- 步骤1：选择科室 -->
@@ -59,12 +59,12 @@
         class="doctor-card"
         @click="selectDoctor(doc)"
       >
-        <div class="doc-avatar">👨‍⚕️</div>
+        <div class="doc-avatar"><van-icon name="manager-o" size="32" /></div>
         <div class="doc-info">
           <div class="doc-name">{{ doc.doctorName }} <span class="doc-title">{{ doc.doctorTitle }}</span></div>
           <div class="doc-quota">
-            <span class="quota-item">🌅 上午剩余 {{ doc.morningQuota || 0 }} 号</span>
-            <span class="quota-item">🌇 下午剩余 {{ doc.afternoonQuota || 0 }} 号</span>
+            <span class="quota-item">上午剩余 {{ doc.morningQuota || 0 }} 号</span>
+            <span class="quota-item">下午剩余 {{ doc.afternoonQuota || 0 }} 号</span>
           </div>
         </div>
         <span class="tag-arrow">›</span>
@@ -86,7 +86,7 @@
       >
         <div class="time-left">
           <div class="time-slot">
-            {{ (s.startTime+'').startsWith('08') ? '🌅 上午 08:00-12:00' : '🌇 下午 14:00-17:00' }}
+            {{ (s.startTime+'').startsWith('08') ? '上午 08:00-12:00' : '下午 14:00-17:00' }}
           </div>
           <div class="time-remain">剩余号源：{{ s.remainQuota }}</div>
         </div>
@@ -240,7 +240,7 @@ const goBooking = (schedule: any) => {
 
 /* 覆盖 van-nav-bar 背景 */
 :deep(.van-nav-bar) {
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
 }
 
 /* 医院信息卡片 */
