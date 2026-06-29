@@ -5,7 +5,6 @@
     <div class="login-card">
       <!-- Logo区 -->
       <div class="login-logo">
-        <div class="logo-icon">🏥</div>
         <h1 class="logo-title">医院预约挂号系统</h1>
         <p class="logo-subtitle">在线挂号 · 便捷就医</p>
       </div>
@@ -83,7 +82,7 @@ const onLogin = async () => {
 /* 全屏渐变背景 */
 .login-page {
   min-height: 100vh;
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,11 +103,6 @@ const onLogin = async () => {
 .login-logo {
   text-align: center;
   margin-bottom: var(--spacing-xxl);
-}
-
-.logo-icon {
-  font-size: 48px;
-  margin-bottom: var(--spacing-sm);
 }
 
 .logo-title {
@@ -147,7 +141,7 @@ const onLogin = async () => {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 4px;
-  border-radius: var(--radius-round) !important;
+  border-radius: var(--radius-md) !important;
 }
 
 /* 底部链接 */

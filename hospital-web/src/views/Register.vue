@@ -5,7 +5,6 @@
     <div class="register-card">
       <!-- Logo区 -->
       <div class="register-logo">
-        <div class="logo-icon">📝</div>
         <h1 class="logo-title">创建账号</h1>
         <p class="logo-subtitle">注册后即可在线预约挂号</p>
       </div>
@@ -101,7 +100,7 @@ const onRegister = async () => {
 /* 全屏渐变背景 */
 .register-page {
   min-height: 100vh;
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,11 +121,6 @@ const onRegister = async () => {
 .register-logo {
   text-align: center;
   margin-bottom: var(--spacing-xxl);
-}
-
-.logo-icon {
-  font-size: 48px;
-  margin-bottom: var(--spacing-sm);
 }
 
 .logo-title {
@@ -165,7 +159,7 @@ const onRegister = async () => {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 4px;
-  border-radius: var(--radius-round) !important;
+  border-radius: var(--radius-md) !important;
 }
 
 /* 底部链接 */

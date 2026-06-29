@@ -1,23 +1,22 @@
 <template>
   <div class="home-page">
-    <!-- 渐变顶栏 -->
+    <!-- 顶栏 -->
     <div class="home-header">
       <div class="header-top">
-        <span class="header-city">📍 北京市</span>
+        <span class="header-city">北京市</span>
       </div>
       <h1 class="header-title">预约挂号</h1>
       <!-- 搜索框 -->
       <div class="search-box">
-        <span class="search-icon">🔍</span>
+        <van-icon name="search" size="16" color="#999" />
         <span class="search-placeholder">搜索医院、科室或医生</span>
       </div>
     </div>
 
     <!-- 科室快捷入口 -->
     <div class="dept-grid">
-      <div class="dept-item" v-for="d in quickDepts" :key="d.name">
-        <div class="dept-icon">{{ d.icon }}</div>
-        <div class="dept-name">{{ d.name }}</div>
+      <div class="dept-item" v-for="d in quickDepts" :key="d">
+        <div class="dept-name">{{ d }}</div>
       </div>
     </div>
 
@@ -28,13 +27,12 @@
         <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
           <div v-for="h in hospitals" :key="h.id" class="hospital-card" @click="$router.push(`/patient/hospital/${h.id}`)">
             <div class="hospital-main">
-              <div class="hospital-icon">🏥</div>
               <div class="hospital-info">
                 <div class="hospital-name">
                   {{ h.name }}
                   <span class="hospital-level">{{ h.level }}</span>
                 </div>
-                <div class="hospital-addr">📍 {{ h.address }}</div>
+                <div class="hospital-addr">{{ h.address }}</div>
               </div>
               <div class="hospital-arrow">›</div>
             </div>
@@ -50,16 +48,7 @@ import { ref } from 'vue';
 import request from '@/utils/request';
 
 /** 快捷科室入口（静态展示） */
-const quickDepts = [
-  { name: '内科', icon: '🫀' },
-  { name: '外科', icon: '🦴' },
-  { name: '儿科', icon: '👶' },
-  { name: '眼科', icon: '👁️' },
-  { name: '妇科', icon: '👩' },
-  { name: '口腔科', icon: '🦷' },
-  { name: '皮肤科', icon: '🧴' },
-  { name: '骨科', icon: '🦵' },
-];
+const quickDepts = ['内科', '外科', '儿科', '眼科', '妇科', '口腔科', '皮肤科', '骨科'];
 
 const hospitals = ref<any[]>([]);
 const loading = ref(false);
@@ -101,10 +90,10 @@ const onRefresh = () => {
 
 /* ====== 渐变顶栏 ====== */
 .home-header {
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
   padding: 24px 16px 32px;
   color: #fff;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0;
 }
 
 .header-top {
@@ -132,10 +121,6 @@ const onRefresh = () => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.search-icon {
-  font-size: 16px;
-}
-
 /* ====== 科室快捷入口 ====== */
 .dept-grid {
   display: grid;
@@ -152,21 +137,13 @@ const onRefresh = () => {
 
 .dept-item {
   text-align: center;
-}
-
-.dept-icon {
-  width: 44px;
-  height: 44px;
-  background: #e8f4fd;
-  border-radius: 12px;
-  margin: 0 auto 6px;
-  line-height: 44px;
-  font-size: 22px;
+  padding: 8px 0;
 }
 
 .dept-name {
-  font-size: var(--font-size-caption);
-  color: var(--text-secondary);
+  font-size: var(--font-size-body);
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 /* ====== 医院列表 ====== */
@@ -200,17 +177,6 @@ const onRefresh = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.hospital-icon {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, #e8f4fd, #d4edfc);
-  border-radius: 10px;
-  text-align: center;
-  line-height: 44px;
-  font-size: 22px;
-  flex-shrink: 0;
 }
 
 .hospital-info {
