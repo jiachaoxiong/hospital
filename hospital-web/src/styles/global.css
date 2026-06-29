@@ -1,43 +1,41 @@
 /* ========================================
  * 全局设计变量 — 医院预约挂号系统
- * 现代清新蓝风格，统一三端视觉
+ * 简约专业风格，深蓝主色，清晰克制
  * ======================================== */
 
 /* ---------- CSS 变量定义 ---------- */
 :root {
-  /* 主色调 */
-  --color-primary: #4facfe;
-  --color-primary-end: #00f2fe;
-  --color-primary-gradient: linear-gradient(135deg, #4facfe, #00f2fe);
-  --color-dark-bg: #1e3a5f;
-  --color-dark-bg-light: #2a4d7a;
+  /* 主色调 — 深蓝 */
+  --color-primary: #1e3a5f;
+  --color-primary-light: #2a4d7a;
+  --color-primary-lighter: #3c6a9e;
 
   /* 功能色 */
-  --color-success: #67c23a;
-  --color-warning: #e6a23c;
-  --color-danger: #f56c6c;
-  --color-info: #909399;
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-danger: #ff4d4f;
+  --color-info: #8c8c8c;
 
   /* 背景 */
-  --bg-page: #f5f7fa;
+  --bg-page: #f0f2f5;
   --bg-card: #ffffff;
 
   /* 文字 */
-  --text-primary: #2c3e50;
-  --text-secondary: #666666;
-  --text-placeholder: #999999;
-  --text-light: #bbbbbb;
+  --text-primary: #1a1a1a;
+  --text-secondary: #595959;
+  --text-placeholder: #8c8c8c;
+  --text-light: #bfbfbf;
 
-  /* 圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-round: 20px;
+  /* 圆角 — 小圆角更专业 */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-round: 4px;
 
-  /* 阴影 */
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --shadow-dialog: 0 8px 24px rgba(0, 0, 0, 0.12);
+  /* 阴影 — 更轻 */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-dialog: 0 4px 16px rgba(0, 0, 0, 0.12);
 
   /* 字体 */
   --font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -53,6 +51,40 @@
   --spacing-lg: 16px;
   --spacing-xl: 20px;
   --spacing-xxl: 24px;
+
+  /* ======== 覆盖 Element Plus CSS 变量 ======== */
+  --el-color-primary: #1e3a5f;
+  --el-color-primary-light-3: #4c6a8c;
+  --el-color-primary-light-5: #7a9abf;
+  --el-color-primary-light-7: #a8c5df;
+  --el-color-primary-light-9: #d6e7f5;
+  --el-color-primary-dark-2: #162a45;
+  --el-color-success: #52c41a;
+  --el-color-warning: #faad14;
+  --el-color-danger: #ff4d4f;
+  --el-border-radius-base: var(--radius-md);
+  --el-border-radius-small: var(--radius-sm);
+  --el-border-radius-round: var(--radius-md);
+  --el-box-shadow-light: var(--shadow-card);
+  --el-font-family: var(--font-family);
+
+  /* ======== 覆盖 Vant CSS 变量 ======== */
+  --van-primary-color: #1e3a5f;
+  --van-card-border-radius: 6px;
+  --van-cell-font-size: 14px;
+  --van-cell-line-height: 22px;
+  --van-nav-bar-background: #1e3a5f;
+  --van-nav-bar-title-text-color: #ffffff;
+  --van-nav-bar-icon-color: #ffffff;
+  --van-nav-bar-text-color: #ffffff;
+  --van-tabbar-item-active-color: #1e3a5f;
+  --van-button-primary-background: #1e3a5f;
+  --van-button-primary-border-color: #1e3a5f;
+  --van-button-border-radius: 4px;
+  --van-button-default-border-radius: 4px;
+  --van-tag-border-radius: 2px;
+  --van-popup-round-border-radius: 8px;
+  --van-cell-group-background: transparent;
 }
 
 /* ---------- 全局重置 ---------- */
@@ -71,11 +103,6 @@ body {
 }
 
 /* ---------- 通用工具类 ---------- */
-
-/* 渐变背景 */
-.gradient-bg {
-  background: var(--color-primary-gradient);
-}
 
 /* 卡片容器 */
 .card {
@@ -118,7 +145,7 @@ body {
 .page-header h3 {
   margin: 0;
   font-size: var(--font-size-title);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
@@ -129,60 +156,42 @@ body {
   margin-bottom: var(--spacing-lg);
 }
 
-/* ======== 覆盖 Element Plus CSS 变量 ======== */
-:root {
-  --el-color-primary: #4facfe;
-  --el-color-primary-light-3: #7ec4ff;
-  --el-color-primary-light-5: #a0d4ff;
-  --el-color-primary-light-7: #c2e4ff;
-  --el-color-primary-light-9: #e4f3ff;
-  --el-color-primary-dark-2: #3b8fd9;
-  --el-color-success: #67c23a;
-  --el-color-warning: #e6a23c;
-  --el-color-danger: #f56c6c;
-  --el-border-radius-base: var(--radius-md);
-  --el-border-radius-small: var(--radius-sm);
-  --el-border-radius-round: var(--radius-round);
-  --el-box-shadow-light: var(--shadow-card);
-  --el-font-family: var(--font-family);
-}
-
 /* Element Plus 表格美化 */
 .el-table {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
-.el-table th.el-table__cell {
-  background: #f0f7ff !important;
+html .el-table th.el-table__cell {
+  background: #f5f7fa;
   color: var(--text-primary);
   font-weight: 600;
 }
 
 .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
-  background: #fafcff;
+  background: #fafafa;
 }
 
-.el-table .el-table__row:hover > td.el-table__cell {
-  background: #e8f4fd !important;
+html .el-table .el-table__row:hover > td.el-table__cell {
+  background: #f0f2f5;
 }
 
-/* Element Plus 按钮圆角增强 */
+/* Element Plus 按钮 */
 .el-button {
   border-radius: var(--radius-md);
 }
 
 .el-button--primary {
-  background: var(--color-primary-gradient);
-  border: none;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .el-button--primary:hover {
-  background: linear-gradient(135deg, #5dbcf8, #1adde8);
-  border: none;
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
 }
 
-/* Element Plus 对话框圆角 */
+/* Element Plus 对话框 */
 .el-dialog {
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -193,11 +202,6 @@ body {
   border-bottom: 1px solid #e8e8e8;
 }
 
-/* Element Plus 分页 */
-.el-pagination {
-  --el-pagination-button-bg-color: var(--bg-card);
-}
-
 /* Element Plus 输入框 */
 .el-input__wrapper {
   border-radius: var(--radius-md);
@@ -205,24 +209,4 @@ body {
 
 .el-select .el-input__wrapper {
   border-radius: var(--radius-md);
-}
-
-/* ======== 覆盖 Vant CSS 变量 ======== */
-:root {
-  --van-primary-color: #4facfe;
-  --van-card-border-radius: 12px;
-  --van-cell-font-size: 14px;
-  --van-cell-line-height: 22px;
-  --van-nav-bar-background: transparent;
-  --van-nav-bar-title-text-color: #ffffff;
-  --van-nav-bar-icon-color: #ffffff;
-  --van-nav-bar-text-color: #ffffff;
-  --van-tabbar-item-active-color: #4facfe;
-  --van-button-primary-background: linear-gradient(135deg, #4facfe, #00f2fe);
-  --van-button-primary-border-color: transparent;
-  --van-button-border-radius: 20px;
-  --van-button-default-border-radius: 20px;
-  --van-tag-border-radius: 4px;
-  --van-popup-round-border-radius: 16px;
-  --van-cell-group-background: transparent;
 }
