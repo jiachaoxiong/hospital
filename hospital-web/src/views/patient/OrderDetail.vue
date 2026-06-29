@@ -5,9 +5,6 @@
     <template v-if="order">
       <!-- 状态卡片 -->
       <div style="margin:16px;padding:20px;background:#fff;border-radius:12px;text-align:center;">
-        <div style="font-size:40px;margin-bottom:8px;">
-          {{ order.status === 'PAID' ? '✅' : order.status === 'PENDING' ? '⏳' : order.status === 'CANCELLED' ? '❌' : '🏥' }}
-        </div>
         <div style="font-size:20px;font-weight:bold;color:#333;">
           {{ statusText(order.status) }}
         </div>
@@ -90,6 +87,6 @@ const cancelOrder = async () => {
 
 <style scoped>
 :deep(.van-nav-bar) {
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
 }
 </style>

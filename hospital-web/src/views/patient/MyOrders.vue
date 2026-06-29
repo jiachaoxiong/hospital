@@ -14,7 +14,7 @@
           <!-- 顶部：医院名 + 状态标签 -->
           <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f0f5ff;border-bottom:1px solid #e8e8e8;">
             <span style="font-weight:600;font-size:15px;color:#333;">
-              🏥 {{ o.hospitalName || '——' }}
+              {{ o.hospitalName || '——' }}
             </span>
             <van-tag :type="statusType(o.status)" size="medium">
               {{ statusText(o.status) }}
@@ -85,6 +85,6 @@ onMounted(loadOrders);
 
 <style scoped>
 :deep(.van-nav-bar) {
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
 }
 </style>

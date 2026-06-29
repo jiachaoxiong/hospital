@@ -135,7 +135,7 @@ const addSchedule = async () => {
 
 <style scoped>
 .add-btn {
-  background: var(--color-primary-gradient) !important;
+  background: #1e3a5f !important;
   border: none !important;
   border-radius: var(--radius-md) !important;
   font-weight: 500;

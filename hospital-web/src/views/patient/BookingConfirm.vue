@@ -29,8 +29,6 @@
       :close-on-click-overlay="false" :style="{ background: '#f7f8fa', padding: '24px 16px 32px' }">
 
       <div style="text-align: center;">
-        <!-- 支付图标 -->
-        <div style="font-size: 48px; margin-bottom: 8px;">💳</div>
         <h3 style="margin: 0 0 4px;">微信支付（模拟）</h3>
         <p style="color: #999; font-size: 13px; margin: 0 0 20px;">
           本系统为演示项目，支付环节为模拟
@@ -167,7 +165,7 @@ const cancelPay = () => {
 
 <style scoped>
 :deep(.van-nav-bar) {
-  background: var(--color-primary-gradient);
+  background: #1e3a5f;
 }
 .confirm-btn {
   height: 48px !important;
