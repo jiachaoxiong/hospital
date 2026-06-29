@@ -86,10 +86,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public void cancelAppointment(Long appointmentId) {
+    public void cancelAppointment(Long userId, Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
         if (appointment == null) {
             throw new BusinessException("预约记录不存在");
+        }
+        // IDOR 防护：校验预约归属，防止越权取消他人预约
+        if (!appointment.getUserId().equals(userId)) {
+            throw new BusinessException(403, "无权操作他人的预约");
         }
         if ("CANCELLED".equals(appointment.getStatus())) {
             throw new BusinessException("预约已取消");
@@ -103,6 +107,36 @@ public class BookingServiceImpl implements BookingService {
                 .eq("id", appointment.getScheduleId())
                 .update();
         log.info("预约已取消: appointmentId={}", appointmentId);
+    }
+
+    @Override
+    @Transactional
+    public void cancelAppointmentInternal(Long appointmentId) {
+        Appointment appointment = appointmentMapper.selectById(appointmentId);
+        if (appointment == null) return;
+        if ("CANCELLED".equals(appointment.getStatus())) return;
+
+        appointment.setStatus("CANCELLED");
+        appointmentMapper.updateById(appointment);
+        // 归还号源
+        scheduleService.update()
+                .setSql("remain_quota = remain_quota + 1")
+                .eq("id", appointment.getScheduleId())
+                .update();
+        log.info("预约已内部取消: appointmentId={}", appointmentId);
+    }
+
+    @Override
+    public void markAsPaid(Long appointmentId) {
+        Appointment appointment = appointmentMapper.selectById(appointmentId);
+        if (appointment == null) {
+            throw new BusinessException("预约记录不存在");
+        }
+        if (!"CANCELLED".equals(appointment.getStatus())) {
+            appointment.setStatus("PAID");
+            appointmentMapper.updateById(appointment);
+            log.info("预约状态更新为PAID: appointmentId={}", appointmentId);
+        }
     }
 
     @Override
@@ -127,10 +161,11 @@ public class BookingServiceImpl implements BookingService {
         // 1. 通过userId找到doctorId
         Long doctorId = getDoctorIdByUserId(userId);
 
-        // 2. 查询该医生的所有预约记录
+        // 2. 查询该医生的有效预约记录（排除已取消的，防止患者取消/管理员删除后医生仍能看到）
         List<Appointment> appointments = appointmentMapper.selectList(
                 new LambdaQueryWrapper<Appointment>()
                         .eq(Appointment::getDoctorId, doctorId)
+                        .ne(Appointment::getStatus, "CANCELLED")
                         .orderByDesc(Appointment::getCreateTime));
 
         List<DoctorPatientVO> result = new ArrayList<>();

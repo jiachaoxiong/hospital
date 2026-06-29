@@ -13,6 +13,7 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASS:HospRedis@2026}
   cloud:
     nacos:
       discovery:
@@ -29,7 +30,8 @@ mybatis-plus:
       logic-not-delete-value: 0
 
 jwt:
-  secret: ${JWT_SECRET:hospital-dev-secret-key-2026-min-length-32}
+  # 生产环境必须通过环境变量注入强密钥：openssl rand -base64 32
+  secret: ${JWT_SECRET}
 
 knife4j:
   enable: true

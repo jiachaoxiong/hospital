@@ -1,10 +1,11 @@
 services:
   # ============ MySQL 数据库（每服务独立） ============
+  # 安全注意：生产环境请通过环境变量或 Docker secrets 注入密码，不要硬编码
   mysql-auth:
     image: mysql:5.7
     container_name: hospital-mysql-auth
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_AUTH_PASS:-HospAuth@2026!}
       MYSQL_DATABASE: hospital_auth
     ports:
       - "3307:3306"
@@ -16,7 +17,7 @@ services:
     image: mysql:5.7
     container_name: hospital-mysql-hospital
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_HOSPITAL_PASS:-HospHosp@2026!}
       MYSQL_DATABASE: hospital_hospital
     ports:
       - "3308:3306"
@@ -28,7 +29,7 @@ services:
     image: mysql:5.7
     container_name: hospital-mysql-booking
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_BOOKING_PASS:-HospBook@2026!}
       MYSQL_DATABASE: hospital_booking
     ports:
       - "3309:3306"
@@ -40,7 +41,7 @@ services:
     image: mysql:5.7
     container_name: hospital-mysql-order
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ORDER_PASS:-HospOrd@2026!}
       MYSQL_DATABASE: hospital_order
     ports:
       - "3310:3306"
@@ -52,7 +53,7 @@ services:
     image: mysql:5.7
     container_name: hospital-mysql-payment
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PAYMENT_PASS:-HospPay@2026!}
       MYSQL_DATABASE: hospital_payment
     ports:
       - "3311:3306"
@@ -64,7 +65,7 @@ services:
     image: mysql:5.7
     container_name: hospital-mysql-notify
     environment:
-      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_NOTIFY_PASS:-HospNoti@2026!}
       MYSQL_DATABASE: hospital_notify
     ports:
       - "3312:3306"
@@ -78,6 +79,7 @@ services:
     container_name: hospital-redis
     ports:
       - "6379:6379"
+    command: redis-server --requirepass ${REDIS_PASS:-HospRedis@2026}
 
   # ============ 消息队列 ============
   rabbitmq:
@@ -87,8 +89,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-HospRabbit@2026!}
 
   # ============ 注册配置中心 ============
   nacos:

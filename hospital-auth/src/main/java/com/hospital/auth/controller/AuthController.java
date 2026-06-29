@@ -7,6 +7,7 @@ import com.hospital.auth.service.AuthService;
 import com.hospital.common.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -31,14 +32,25 @@ public class AuthController {
 
     @Operation(summary = "用户注册")
     @PostMapping("/register")
-    public R<Map<String, String>> register(@RequestBody RegisterDTO dto) {
-        return authService.register(dto.getPhone(), dto.getPassword(), dto.getName(), dto.getRole());
+    public R<Map<String, String>> register(@Valid @RequestBody RegisterDTO dto) {
+        return authService.register(dto.getPhone(), dto.getPassword(), dto.getName(), dto.getRole(), dto.getCode());
     }
 
     @Operation(summary = "用户登录")
     @PostMapping("/login")
-    public R<Map<String, String>> login(@RequestBody LoginDTO dto) {
+    public R<Map<String, String>> login(@Valid @RequestBody LoginDTO dto) {
         return authService.login(dto.getPhone(), dto.getPassword());
+    }
+
+    @Operation(summary = "登出（Token加入黑名单）")
+    @PostMapping("/logout")
+    public R<Void> logout(@RequestHeader("Authorization") String authHeader) {
+        String token = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+        authService.logout(token);
+        return R.ok();
     }
 
     @Operation(summary = "根据ID获取用户信息")

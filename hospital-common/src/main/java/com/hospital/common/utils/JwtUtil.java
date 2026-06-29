@@ -11,16 +11,26 @@ import java.util.Date;
  */
 public class JwtUtil {
 
-    private static final String DEFAULT_SECRET = "hospital-dev-secret-key-2026-min-length-32";
+    /** 最低密钥长度要求（256位 = 32字节），低于此长度拒绝启动 */
+    private static final int MIN_SECRET_LENGTH = 32;
     private static final long ACCESS_EXPIRATION = 1000 * 60 * 60 * 24;
     private static final long REFRESH_EXPIRATION = 1000 * 60 * 60 * 24 * 7;
 
+    /**
+     * 从密钥字符串派生 HMAC-SHA 签名密钥。
+     * 如果密钥长度不足 {@value #MIN_SECRET_LENGTH} 字节，抛出异常拒绝服务，
+     * 防止因弱密钥导致 JWT 签名被暴力破解。
+     */
     private static SecretKey getKey(String secret) {
-        byte[] keyBytes = (secret != null ? secret : DEFAULT_SECRET).getBytes(StandardCharsets.UTF_8);
-        if (keyBytes.length < 32) {
-            byte[] padded = new byte[32];
-            System.arraycopy(keyBytes, 0, padded, 0, Math.min(keyBytes.length, 32));
-            keyBytes = padded;
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException(
+                "JWT密钥未配置！请设置环境变量 JWT_SECRET，长度至少 " + MIN_SECRET_LENGTH + " 字节");
+        }
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < MIN_SECRET_LENGTH) {
+            throw new IllegalStateException(
+                "JWT密钥长度不足！当前 " + keyBytes.length + " 字节，需要至少 " + MIN_SECRET_LENGTH + " 字节。" +
+                "请使用: openssl rand -base64 32");
         }
         return Keys.hmacShaKeyFor(keyBytes);
     }

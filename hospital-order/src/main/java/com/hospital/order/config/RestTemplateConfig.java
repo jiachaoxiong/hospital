@@ -1,0 +1,17 @@
+package com.hospital.order.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+
+/**
+ * RestTemplate 配置 — 用于跨微服务 HTTP 调用（如支付成功后通知预约服务）
+ */
+@Configuration
+public class RestTemplateConfig {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}

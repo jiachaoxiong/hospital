@@ -13,7 +13,7 @@ spring:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USER:admin}
-    password: ${RABBITMQ_PASS:admin123}
+    password: ${RABBITMQ_PASS:HospRabbit@2026!}
   cloud:
     nacos:
       discovery:

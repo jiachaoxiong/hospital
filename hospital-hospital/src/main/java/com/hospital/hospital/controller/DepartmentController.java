@@ -26,4 +26,12 @@ public class DepartmentController {
     public R<List<Department>> list(@RequestParam Long hospitalId) {
         return R.ok(departmentService.listByHospitalId(hospitalId));
     }
+
+    @Operation(summary = "根据ID获取科室详情")
+    @GetMapping("/{id}")
+    public R<Department> detail(@PathVariable Long id) {
+        Department dept = departmentService.getById(id);
+        if (dept == null) return R.fail("科室不存在");
+        return R.ok(dept);
+    }
 }

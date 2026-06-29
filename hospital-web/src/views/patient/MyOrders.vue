@@ -7,12 +7,11 @@
 
     <!-- 订单列表 -->
     <van-pull-refresh v-model="refreshing" @refresh="loadOrders">
-      <div v-for="o in orders" :key="o.id" style="margin: 12px 16px;"
-        @click="goDetail(o)">
+      <div v-for="o in orders" :key="o.id" style="margin: 12px 16px;">
         <!-- 订单卡片 -->
         <div style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.08);">
           <!-- 顶部：医院名 + 状态标签 -->
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f0f5ff;border-bottom:1px solid #e8e8e8;">
+          <div @click="goDetail(o)" style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f0f5ff;border-bottom:1px solid #e8e8e8;">
             <span style="font-weight:600;font-size:15px;color:#333;">
               {{ o.hospitalName || '——' }}
             </span>
@@ -21,8 +20,8 @@
             </van-tag>
           </div>
 
-          <!-- 订单详情 -->
-          <div style="padding:12px 16px;">
+          <!-- 订单详情（点击查看详情） -->
+          <div @click="goDetail(o)" style="padding:12px 16px;">
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
               <span style="color:#666;font-size:13px;">科室</span>
               <span style="color:#333;font-size:13px;">{{ o.deptName || '——' }}</span>
@@ -40,6 +39,20 @@
               <span style="font-weight:bold;color:#e74c3c;font-size:16px;">¥{{ o.amount }}</span>
             </div>
           </div>
+
+          <!-- 操作按钮区：待支付订单显示取消按钮 -->
+          <div v-if="o.status === 'PENDING'"
+            style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fff;">
+            <span style="color:#999;font-size:12px;">订单待支付，可取消</span>
+            <van-button size="small" type="danger" plain round
+              @click.stop="cancelOrder(o)">
+              取消订单
+            </van-button>
+          </div>
+          <div v-else
+            style="display:flex;justify-content:flex-end;align-items:center;padding:10px 16px;border-top:1px solid #f0f0f0;background:#fafafa;">
+            <span style="color:#999;font-size:12px;">点击卡片查看详情</span>
+          </div>
         </div>
       </div>
     </van-pull-refresh>
@@ -50,6 +63,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import request from '@/utils/request';
+import { showToast, showConfirmDialog } from 'vant';
 
 const router = useRouter();
 const orders = ref<any[]>([]);
@@ -72,6 +86,28 @@ const loadOrders = async () => {
   } finally {
     loading.value = false;
     refreshing.value = false;
+  }
+};
+
+// 取消订单（带确认弹窗）
+const cancelOrder = async (order: any) => {
+  try {
+    await showConfirmDialog({
+      title: '确认取消',
+      message: `确定要取消 ${order.hospitalName} ${order.doctorName} 医生的预约吗？取消后将释放号源。`,
+      confirmButtonText: '确定取消',
+      confirmButtonColor: '#e74c3c',
+      cancelButtonText: '暂不取消',
+    });
+    const res: any = await request.post(`/order/cancel/${order.id}`);
+    if (res.code === 200) {
+      showToast('订单已取消，号源已释放');
+      order.status = 'CANCELLED';
+    }
+  } catch (e: any) {
+    if (e.response?.data?.message) {
+      showToast(e.response.data.message);
+    }
   }
 };
 

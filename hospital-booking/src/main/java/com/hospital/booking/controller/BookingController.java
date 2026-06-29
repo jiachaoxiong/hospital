@@ -29,8 +29,9 @@ public class BookingController {
 
     @Operation(summary = "取消预约")
     @PostMapping("/cancel/{id}")
-    public R<Void> cancel(@PathVariable Long id) {
-        bookingService.cancelAppointment(id);
+    public R<Void> cancel(@RequestHeader("X-User-Id") Long userId,
+                          @PathVariable Long id) {
+        bookingService.cancelAppointment(userId, id);
         return R.ok();
     }
 
@@ -38,5 +39,19 @@ public class BookingController {
     @GetMapping("/doctor/patients")
     public R<List<DoctorPatientVO>> doctorPatients(@RequestHeader("X-User-Id") Long userId) {
         return R.ok(bookingService.getDoctorPatients(userId));
+    }
+
+    @Operation(summary = "内部接口：支付成功后更新预约状态为PAID")
+    @PostMapping("/paid/{appointmentId}")
+    public R<Void> markPaid(@PathVariable Long appointmentId) {
+        bookingService.markAsPaid(appointmentId);
+        return R.ok();
+    }
+
+    @Operation(summary = "内部接口：取消预约（不受IDOR限制，供其他服务调用）")
+    @PostMapping("/internal/cancel/{appointmentId}")
+    public R<Void> internalCancel(@PathVariable Long appointmentId) {
+        bookingService.cancelAppointmentInternal(appointmentId);
+        return R.ok();
     }
 }

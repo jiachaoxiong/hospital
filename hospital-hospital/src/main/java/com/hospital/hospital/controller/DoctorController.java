@@ -38,6 +38,14 @@ public class DoctorController {
         return R.ok(doctorService.pageQuery(current, size, hospitalId, departmentId));
     }
 
+    @Operation(summary = "根据ID获取医生详情")
+    @GetMapping("/{id}")
+    public R<Doctor> detail(@PathVariable Long id) {
+        Doctor doctor = doctorService.getById(id);
+        if (doctor == null) return R.fail("医生不存在");
+        return R.ok(doctor);
+    }
+
     @Operation(summary = "新增医生")
     @PostMapping("/add")
     public R<Void> add(@RequestBody Doctor doctor) {

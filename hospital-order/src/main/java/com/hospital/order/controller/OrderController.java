@@ -42,10 +42,11 @@ public class OrderController {
         return R.ok();
     }
 
-    @Operation(summary = "取消订单")
+    @Operation(summary = "取消订单（仅订单归属人可操作）")
     @PostMapping("/cancel/{id}")
-    public R<Void> cancel(@PathVariable Long id) {
-        orderService.cancelOrder(id);
+    public R<Void> cancel(@RequestHeader("X-User-Id") Long userId,
+                          @PathVariable Long id) {
+        orderService.cancelOrder(userId, id);
         return R.ok();
     }
 
@@ -70,9 +71,11 @@ public class OrderController {
         return R.ok(orderService.listAllOrders(current, size));
     }
 
-    @Operation(summary = "订单详情")
+    @Operation(summary = "订单详情（仅订单归属人或管理员可查看）")
     @GetMapping("/{id}")
-    public R<Order> detail(@PathVariable Long id) {
-        return orderService.getOrderById(id);
+    public R<Order> detail(@RequestHeader("X-User-Id") Long userId,
+                           @RequestHeader("X-User-Role") String role,
+                           @PathVariable Long id) {
+        return orderService.getOrderById(userId, role, id);
     }
 }

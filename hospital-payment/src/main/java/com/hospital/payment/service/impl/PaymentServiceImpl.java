@@ -8,14 +8,20 @@ import com.hospital.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRecordMapper paymentRecordMapper;
+    private final RestTemplate restTemplate;
+
+    public PaymentServiceImpl(PaymentRecordMapper paymentRecordMapper, RestTemplate restTemplate) {
+        this.paymentRecordMapper = paymentRecordMapper;
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public R<Map<String, String>> createPayment(Long orderId, Double amount) {
@@ -44,5 +50,15 @@ public class PaymentServiceImpl implements PaymentService {
         record.setStatus("SUCCESS");
         paymentRecordMapper.updateById(record);
         log.info("【模拟支付】支付成功: orderId={}, tradeNo={}", orderId, tradeNo);
+
+        // 调用订单服务更新订单状态为 PAID（触发后续预约状态更新链路）
+        try {
+            restTemplate.postForObject(
+                    "http://localhost:8084/order/pay-success/" + orderId,
+                    null, String.class);
+            log.info("已通知订单服务更新订单状态: orderId={}", orderId);
+        } catch (Exception e) {
+            log.error("通知订单服务失败: orderId={}, error={}", orderId, e.getMessage());
+        }
     }
 }

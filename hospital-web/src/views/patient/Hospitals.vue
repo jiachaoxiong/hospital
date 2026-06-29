@@ -65,7 +65,13 @@ const onLoad = async () => {
       hospitals.value.push(...res.data.records);
       finished.value = res.data.records.length < 10 || hospitals.value.length >= (res.data.total || 0);
       page++;
+    } else {
+      // 业务错误时停止加载，防止无限循环
+      finished.value = true;
     }
+  } catch (e: any) {
+    // 网络错误或 401 时停止加载
+    finished.value = true;
   } finally {
     loading.value = false;
     refreshing.value = false;

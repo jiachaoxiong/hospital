@@ -10,10 +10,12 @@ import java.util.Map;
 public interface AuthService {
     /** 发送短信验证码 */
     void sendCode(String phone);
-    /** 用户注册 */
-    R<Map<String, String>> register(String phone, String password, String name, String role);
+    /** 用户注册（需校验短信验证码） */
+    R<Map<String, String>> register(String phone, String password, String name, String role, String code);
     /** 手机号+密码登录 */
     R<Map<String, String>> login(String phone, String password);
+    /** 登出（将Token加入黑名单） */
+    void logout(String token);
 
     /** 根据ID获取用户信息 */
     User getUserById(Long userId);
